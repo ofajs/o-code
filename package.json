@@ -1,0 +1,17 @@
+{
+  "name": "o-code",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A component that displays the effect of HTML pages online without relying on dynamic servers.",
+  "main": "index.js",
+  "scripts": {
+    "static": "node scripts/static-server.js"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "archiver": "^7.0.1",
+    "koa": "^2.14.1",
+    "koa-static": "^5.0.0"
+  }
+}
