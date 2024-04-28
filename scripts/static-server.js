@@ -22,7 +22,7 @@ app.use(async (ctx, next) => {
 app.use(home);
 
 const _server = app.listen(6515);
-console.log(`server start => http://localhost:6515/test/test.html`);
+console.log(`server start => http://localhost:6515/test/demo.html`);
 
 export default {
   server: _server,
