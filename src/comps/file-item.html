@@ -1,0 +1,113 @@
+<template component>
+  <style>
+    :host {
+      position: relative;
+      display: block;
+    }
+
+    .container:hover {
+      background-color: rgba(255, 255, 255, 0.07);
+    }
+
+    .container {
+      display: flex;
+      align-items: center;
+      padding-left: 6px;
+      font-size: 14px;
+      height: 30px;
+      font-weight: 500;
+    }
+    .icon-con {
+      display: flex;
+      align-items: center;
+      width: 24px;
+      /* background-color: red; */
+    }
+
+    .childs {
+      padding-left: 12px;
+    }
+
+    /* .hover-bg {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: red;
+      opacity: 0;
+    } */
+
+    :host(> *) {
+      padding-left: 12px;
+    }
+  </style>
+  <div class="container">
+    <div class="icon-con">
+      <iconify-icon attr:icon="iconname" :css.font-size="size"></iconify-icon>
+    </div>
+    {{name}}
+  </div>
+  <div class="childs">
+    <slot></slot>
+  </div>
+  <div class="hover-bg"></div>
+  <script>
+    export default {
+      tag: "file-item",
+      attrs: {
+        folder: null,
+        name: "",
+      },
+      data: {
+        suffix: "",
+        iconname: null,
+        size: "18px",
+      },
+      watch: {
+        name(name) {
+          if (this.folder !== null) {
+            this.iconname = "material-symbols:folder-outline";
+            return;
+          }
+
+          const pArr = this.name.split(".");
+          if (pArr.length === 1) {
+            this.iconname = "insert-drive-file-outlined";
+            return;
+          }
+
+          const suffix = pArr[pArr.length - 1];
+
+          let iconname = "insert-drive-file-outlined";
+          let size = "18px";
+
+          switch (suffix) {
+            case "html":
+              iconname = "material-symbols:code";
+              break;
+            case "js":
+            case "mjs":
+            case "cjs":
+              iconname = "fluent:code-js-16-filled";
+              break;
+            case "css":
+              iconname = "ph:hash-bold";
+              size = "15px";
+              break;
+            case "json":
+              iconname = "ph:brackets-curly-bold";
+              size = "16px";
+              break;
+            case "md":
+              iconname = "material-symbols:markdown";
+              break;
+          }
+
+          this.size = size;
+          this.iconname = iconname;
+        },
+      },
+    };
+  </script>
+</template>
