@@ -1,57 +1,64 @@
 <template component>
   <style>
     :host {
-      position: relative;
       display: block;
+      user-select: none;
+      --space-left: var(--sub-space-left, 6px);
     }
-
-    .container:hover {
-      background-color: rgba(255, 255, 255, 0.07);
-    }
-
     .container {
+      position: relative;
       display: flex;
       align-items: center;
-      padding-left: 6px;
-      font-size: 14px;
+      padding-left: var(--space-left);
+      font-size: 15px;
       height: 30px;
       font-weight: 500;
     }
-    .icon-con {
-      display: flex;
-      align-items: center;
-      width: 24px;
-      /* background-color: red; */
+
+    .container > * {
+      z-index: 1;
+      position: relative;
     }
 
-    .childs {
-      padding-left: 12px;
-    }
-
-    /* .hover-bg {
+    .bg-con {
+      z-index: 0;
       position: absolute;
       left: 0;
       top: 0;
       width: 100%;
       height: 100%;
-      background-color: red;
-      opacity: 0;
-    } */
+    }
 
-    :host(> *) {
-      padding-left: 12px;
+    .container:hover .bg-con {
+      background-color: rgba(255, 255, 255, 0.07);
+    }
+
+    :host([selected]) .bg-con {
+      box-sizing: border-box;
+      background-color: rgba(0, 102, 255, 0.3);
+      border: rgba(0, 102, 255, 1) solid 1px;
+    }
+    .icon-con {
+      display: flex;
+      align-items: center;
+      width: 24px;
+    }
+
+    .childs {
+      --sub-space-left: calc(var(--space-left) * 2);
     }
   </style>
-  <div class="container">
+  <div class="container" part="container">
+    <div class="bg-con"></div>
     <div class="icon-con">
       <iconify-icon attr:icon="iconname" :css.font-size="size"></iconify-icon>
     </div>
-    {{name}}
+    <div>{{name}}</div>
   </div>
+  <div class="hover-bg"></div>
   <div class="childs">
     <slot></slot>
   </div>
-  <div class="hover-bg"></div>
   <script>
     export default {
       tag: "file-item",

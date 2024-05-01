@@ -83,14 +83,14 @@
     </div>
   </div>
   <div class="second-pannel">
-    <file-item name="o-code" folder>
-      <file-item name="demo.html"></file-item>
-      <file-item name="code.js"></file-item>
-      <file-item name="code2.css"></file-item>
-      <file-item name="o-code2" folder>
-        <file-item name="code3.json"></file-item>
-        <file-item name="code.md"></file-item>
-      </file-item>
-    </file-item>
+    <x-fill :value="list" name="file-item"></x-fill>
   </div>
+
+  <template name="file-item">
+    <file-item attr:name="$data.name" attr:folder="$data.list ? '' : null">
+      <x-if :value="$data.list">
+        <x-fill :value="$data.list" name="file-item"></x-fill>
+      </x-if>
+    </file-item>
+  </template>
 </div>
