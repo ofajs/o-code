@@ -19,6 +19,7 @@ export default async ({ load }) => {
             },
             {
               name: "code2.css",
+              selected: 1,
             },
             {
               name: "test-dir",
@@ -34,6 +35,25 @@ export default async ({ load }) => {
           ],
         },
       ],
+    },
+    proto: {
+      clickItem(data, event) {
+        event.stopPropagation();
+        if (data.selected) {
+          return;
+        }
+
+        if (data.list) {
+          return;
+        }
+
+        data.selected = 1;
+
+        // 将原来激活的项目都清空
+        this.shadow
+          .all("file-item[selected]")
+          .forEach(($el) => ($el.__item.$data.selected = null));
+      },
     },
   };
 };

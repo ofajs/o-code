@@ -87,7 +87,12 @@
   </div>
 
   <template name="file-item">
-    <file-item attr:name="$data.name" attr:folder="$data.list ? '' : null">
+    <file-item
+      attr:name="$data.name"
+      attr:folder="$data.list ? '' : null"
+      attr:selected="$data.selected ? '' : null"
+      on:click="$host.clickItem($data,$event)"
+    >
       <x-if :value="$data.list">
         <x-fill :value="$data.list" name="file-item"></x-fill>
       </x-if>
