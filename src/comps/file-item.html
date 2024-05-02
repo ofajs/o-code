@@ -14,6 +14,8 @@
       height: 30px;
       font-weight: 500;
       cursor: pointer;
+      overflow: hidden;
+      transition: all ease 0.2s;
     }
 
     .container > * {
@@ -42,13 +44,32 @@
     .icon-con {
       display: flex;
       align-items: center;
-      width: 24px;
+      width: 22px;
     }
 
     .childs {
       --sub-space-left: calc(var(--space-left) * 2);
     }
+
+    iconify-icon {
+      transition: all ease 0.3s;
+    }
+
+    :host([folder="1"]) iconify-icon {
+      transform: rotate(90deg);
+    }
+    :host([folder="2"]) iconify-icon {
+      transform: rotate(0deg);
+    }
   </style>
+  <inject-host>
+    <style>
+      file-item[folder="2"] file-item::part(container) {
+        height: 0px;
+        opacity: 0;
+      }
+    </style>
+  </inject-host>
   <div class="container" part="container">
     <div class="bg-con"></div>
     <div class="icon-con">
@@ -75,7 +96,7 @@
       watch: {
         name(name) {
           if (this.folder !== null) {
-            this.iconname = "material-symbols:folder-outline";
+            this.iconname = "mingcute:right-fill";
             return;
           }
 
@@ -115,6 +136,17 @@
           this.size = size;
           this.iconname = iconname;
         },
+      },
+      ready() {
+        this.on("click", () => {
+          if (this.folder !== null) {
+            if (this.folder == "1") {
+              this.__item.$data.folder = "2";
+            } else {
+              this.__item.$data.folder = "1";
+            }
+          }
+        });
       },
     };
   </script>

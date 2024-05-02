@@ -10,6 +10,7 @@ export default async ({ load }) => {
       list: [
         {
           name: "o-code",
+          folder: 1,
           list: [
             {
               name: "demo.html",
@@ -23,6 +24,7 @@ export default async ({ load }) => {
             },
             {
               name: "test-dir",
+              folder: 1,
               list: [
                 {
                   name: "code3.json",
@@ -39,6 +41,7 @@ export default async ({ load }) => {
     proto: {
       clickItem(data, event) {
         event.stopPropagation();
+
         if (data.selected) {
           return;
         }

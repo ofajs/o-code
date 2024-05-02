@@ -58,6 +58,12 @@
     width: 300px;
     border-right: #2b2b2b solid 1px;
   }
+
+  .second-pannel h4 {
+    margin: 12px 0 4px 12px;
+    padding: 0;
+    font-size: 12px;
+  }
 </style>
 
 <div class="container">
@@ -83,13 +89,14 @@
     </div>
   </div>
   <div class="second-pannel">
+    <h4>资源管理器</h4>
     <x-fill :value="list" name="file-item"></x-fill>
   </div>
 
   <template name="file-item">
     <file-item
       attr:name="$data.name"
-      attr:folder="$data.list ? '' : null"
+      attr:folder="$data.folder ? $data.folder : null"
       attr:selected="$data.selected ? '' : null"
       on:click="$host.clickItem($data,$event)"
     >
