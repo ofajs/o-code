@@ -39,6 +39,16 @@ export default async ({ load }) => {
       ],
     },
     proto: {
+      dblclickItem(data, event) {
+        event.stopPropagation();
+
+        // 将原来激活的项目都清空
+        this.shadow
+          .all("file-item[selected]")
+          .forEach(($el) => ($el.__item.$data.selected = null));
+
+        data.selected = 1;
+      },
       clickItem(data, event) {
         event.stopPropagation();
 
@@ -50,12 +60,12 @@ export default async ({ load }) => {
           return;
         }
 
-        data.selected = 1;
-
         // 将原来激活的项目都清空
         this.shadow
           .all("file-item[selected]")
           .forEach(($el) => ($el.__item.$data.selected = null));
+
+        data.selected = 1;
       },
     },
   };

@@ -2,148 +2,49 @@
   <style>
     :host {
       display: block;
-      user-select: none;
-      --space-left: var(--sub-space-left, 6px);
-    }
-    .container {
-      position: relative;
-      display: flex;
-      align-items: center;
-      padding-left: var(--space-left);
-      font-size: 15px;
-      height: 30px;
-      font-weight: 500;
-      cursor: pointer;
-      overflow: hidden;
-      transition: all ease 0.2s;
-    }
-
-    .container > * {
-      z-index: 1;
-      position: relative;
-    }
-
-    .bg-con {
-      z-index: 0;
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    .container:hover .bg-con {
-      background-color: rgba(255, 255, 255, 0.07);
-    }
-
-    :host([selected]) .bg-con {
-      box-sizing: border-box;
-      background-color: rgba(0, 102, 255, 0.3);
-      border: rgba(0, 102, 255, 1) solid 1px;
-    }
-    .icon-con {
-      display: flex;
-      align-items: center;
-      width: 22px;
-    }
-
-    .childs {
-      --sub-space-left: calc(var(--space-left) * 2);
-    }
-
-    iconify-icon {
-      transition: all ease 0.3s;
-    }
-
-    :host([folder="1"]) iconify-icon {
-      transform: rotate(90deg);
-    }
-    :host([folder="2"]) iconify-icon {
-      transform: rotate(0deg);
     }
   </style>
+  <l-m src="./file-item-inner.html"></l-m>
   <inject-host>
     <style>
-      file-item[folder="2"] file-item::part(container) {
-        height: 0px;
-        opacity: 0;
+      file-item[folder="2"] file-item {
+        --item-height: 0px;
+        --item-opacity: 0;
       }
     </style>
   </inject-host>
-  <div class="container" part="container">
-    <div class="bg-con"></div>
-    <div class="icon-con">
-      <iconify-icon attr:icon="iconname" :css.font-size="size"></iconify-icon>
-    </div>
-    <div>{{name}}</div>
-  </div>
-  <div class="hover-bg"></div>
-  <div class="childs">
+  <file-item-inner
+    :folder="folder"
+    :name="name"
+    part="item"
+    attr:selected="selected"
+  >
     <slot></slot>
-  </div>
+  </file-item-inner>
   <script>
     export default {
       tag: "file-item",
       attrs: {
         folder: null,
         name: "",
+        selected: null,
       },
-      data: {
-        suffix: "",
-        iconname: null,
-        size: "18px",
-      },
-      watch: {
-        name(name) {
-          if (this.folder !== null) {
-            this.iconname = "mingcute:right-fill";
-            return;
-          }
-
-          const pArr = this.name.split(".");
-          if (pArr.length === 1) {
-            this.iconname = "insert-drive-file-outlined";
-            return;
-          }
-
-          const suffix = pArr[pArr.length - 1];
-
-          let iconname = "insert-drive-file-outlined";
-          let size = "18px";
-
-          switch (suffix) {
-            case "html":
-              iconname = "material-symbols:code";
-              break;
-            case "js":
-            case "mjs":
-            case "cjs":
-              iconname = "fluent:code-js-16-filled";
-              break;
-            case "css":
-              iconname = "ph:hash-bold";
-              size = "15px";
-              break;
-            case "json":
-              iconname = "ph:brackets-curly-bold";
-              size = "16px";
-              break;
-            case "md":
-              iconname = "material-symbols:markdown";
-              break;
-          }
-
-          this.size = size;
-          this.iconname = iconname;
-        },
-      },
+      watch: {},
       ready() {
         this.on("click", () => {
           if (this.folder !== null) {
-            if (this.folder == "1") {
-              this.__item.$data.folder = "2";
+            if (this?.__item?.$data) {
+              if (this.folder == "1") {
+                this.__item.$data.folder = "2";
+              } else {
+                this.__item.$data.folder = "1";
+              }
             } else {
-              this.__item.$data.folder = "1";
+              if (this.folder == "1") {
+                this.folder = "2";
+              } else {
+                this.folder = "1";
+              }
             }
           }
         });
