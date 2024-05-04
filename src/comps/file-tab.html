@@ -15,26 +15,26 @@
       border-bottom: none;
     }
 
-    file-item-inner::part(bg) {
+    ocode-file-item-inner::part(bg) {
       background-color: transparent;
     }
   </style>
   <inject-host>
     <style>
-      file-tab:hover {
+      ocode-file-tab:hover {
         background-color: rgba(255, 255, 255, 0.03);
       }
     </style>
   </inject-host>
   <l-m src="./file-item-inner.html"></l-m>
 
-  <file-item-inner :name="name">
+  <ocode-file-item-inner :name="name">
     <slot></slot>
-  </file-item-inner>
+  </ocode-file-item-inner>
 
   <script>
     export default {
-      tag: "file-tab",
+      tag: "ocode-file-tab",
       attrs: {
         name: "",
         selected: null,

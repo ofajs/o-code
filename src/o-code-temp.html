@@ -3,6 +3,7 @@
 ></l-m>
 <l-m src="./comps/file-item.html"></l-m>
 <l-m src="./comps/file-tab.html"></l-m>
+<l-m src="./comps/code-editor.html"></l-m>
 <style>
   :host {
     display: block;
@@ -120,7 +121,7 @@
     <x-fill :value="list" name="file-item"></x-fill>
 
     <template name="file-item">
-      <file-item
+      <ocode-file-item
         attr:name="$data.name"
         attr:folder="$data.folder ? $data.folder : null"
         attr:selected="$data.selected ? '' : null"
@@ -130,16 +131,18 @@
         <x-if :value="$data.list">
           <x-fill :value="$data.list" name="file-item"></x-fill>
         </x-if>
-      </file-item>
+      </ocode-file-item>
     </template>
   </div>
   <div class="main-pannel">
     <div class="main-tabs">
-      <file-tab name="test1.css"></file-tab>
-      <file-tab name="test2.css" selected></file-tab>
-      <file-tab name="test3.css"></file-tab>
+      <ocode-file-tab name="test1.css"></ocode-file-tab>
+      <ocode-file-tab name="test2.css" selected></ocode-file-tab>
+      <ocode-file-tab name="test3.css"></ocode-file-tab>
       <div class="tab-right"></div>
     </div>
-    <div class="code-area">code</div>
+    <div class="code-area">
+      <ocode-editor></ocode-editor>
+    </div>
   </div>
 </div>
