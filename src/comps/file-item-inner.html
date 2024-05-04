@@ -51,17 +51,11 @@
     .icon-con {
       display: flex;
       align-items: center;
-      /* justify-content: center; */
       width: 22px;
-      /* background-color: red; */
     }
 
     .childs {
       --sub-space-left: calc(var(--space-left) * 2);
-    }
-
-    iconify-icon {
-      transition: all ease 0.3s;
     }
 
     :host([folder="1"]) iconify-icon {
@@ -74,7 +68,11 @@
   <div class="container" part="container">
     <div class="bg-con" part="bg"></div>
     <div class="icon-con">
-      <iconify-icon attr:icon="iconname" :css.font-size="size"></iconify-icon>
+      <iconify-icon
+        attr:icon="iconname"
+        :css.font-size="size"
+        :css.color="iconcolor"
+      ></iconify-icon>
     </div>
     <div>{{name}}</div>
   </div>
@@ -92,6 +90,7 @@
         suffix: "",
         iconname: null,
         size: "18px",
+        iconcolor: null,
       },
       watch: {
         name(name) {
@@ -110,26 +109,32 @@
 
           let iconname = "insert-drive-file-outlined";
           let size = "18px";
+          let iconcolor = null;
 
           switch (suffix) {
             case "html":
               iconname = "material-symbols:code";
+              iconcolor = "#fb4747";
               break;
             case "js":
             case "mjs":
             case "cjs":
               iconname = "fluent:code-js-16-filled";
+              iconcolor = "#cdca4c";
               break;
             case "css":
               iconname = "ph:hash-bold";
+              iconcolor = "#0c86e0";
               size = "15px";
               break;
             case "json":
               iconname = "ph:brackets-curly-bold";
               size = "16px";
+              iconcolor = "#cdca4c";
               break;
             case "md":
               iconname = "material-symbols:markdown";
+              iconcolor = "#4e9bb9";
               break;
             default:
               iconname = "mdi:file-outline";
@@ -137,6 +142,7 @@
 
           this.size = size;
           this.iconname = iconname;
+          this.iconcolor = iconcolor;
         },
       },
     };

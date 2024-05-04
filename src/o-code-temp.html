@@ -92,6 +92,10 @@
     background-color: var(--main-pannel-color);
     border-bottom: var(--border-color) solid 1px;
   }
+
+  .not-resident {
+    font-style: italic;
+  }
 </style>
 
 <div class="container">
@@ -141,6 +145,7 @@
           attr:name="$data.name"
           attr:selected="$host.selectedFilePath === $data.path ? '' : null"
           on:click="$host.clickTab($data,$event)"
+          class:not-resident="$data.notResident"
         ></ocode-file-tab>
       </x-fill>
 

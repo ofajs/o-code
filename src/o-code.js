@@ -54,27 +54,47 @@ export default async ({ load }) => {
       dblclickItem(data, event) {
         event.stopPropagation();
 
-        // 将原来激活的项目都清空
-        this.shadow
-          .all("ocode-file-item[selected]")
-          .forEach(($el) => ($el.__item.$data.selected = null));
-
-        data.selected = 1;
-      },
-      clickItem(data, event) {
-        event.stopPropagation();
-
-        data.selected = 1;
-
         if (!data.list) {
           this.selectedFilePath = data.path;
 
+          const exitedTab = this.tabs.find(
+            (e) => e.path === this.selectedFilePath
+          );
+
           // 不在tabs上就直接添加
-          if (!this.tabs.find((e) => e.path === this.selectedFilePath)) {
+          if (!exitedTab) {
             this.tabs.push({
               name: data.name,
               path: data.path,
             });
+          } else {
+            exitedTab.notResident = null;
+          }
+        }
+      },
+      clickItem(data, event) {
+        event.stopPropagation();
+
+        if (!data.list) {
+          this.selectedFilePath = data.path;
+
+          const exitedTab = this.tabs.find(
+            (e) => e.path === this.selectedFilePath
+          );
+
+          if (!exitedTab) {
+            // 查看是否有未常驻的，有的哈修改未常驻
+            const notResTab = this.tabs.find((e) => e.notResident);
+            if (notResTab) {
+              notResTab.name = data.name;
+              notResTab.path = data.path;
+            } else {
+              this.tabs.push({
+                name: data.name,
+                path: data.path,
+                notResident: 1, // 未常驻的状态
+              });
+            }
           }
         }
       },
