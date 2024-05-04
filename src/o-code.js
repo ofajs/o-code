@@ -44,7 +44,7 @@ export default async ({ load }) => {
 
         // 将原来激活的项目都清空
         this.shadow
-          .all("file-item[selected]")
+          .all("ocode-file-item[selected]")
           .forEach(($el) => ($el.__item.$data.selected = null));
 
         data.selected = 1;
@@ -58,7 +58,7 @@ export default async ({ load }) => {
 
         // 将原来激活的项目都清空
         this.shadow
-          .all("file-item[selected]")
+          .all("ocode-file-item[selected]")
           .forEach(($el) => ($el.__item.$data.selected = null));
 
         data.selected = 1;

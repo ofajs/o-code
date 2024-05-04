@@ -7,8 +7,26 @@
       height: 100%;
       overflow: auto;
     }
+
+    textarea {
+      box-sizing: border-box;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      padding: 8px;
+      border: none;
+      resize: none;
+      background-color: transparent;
+      outline: none;
+      color: #fff;
+      font-size: 14px;
+    }
   </style>
-  <div class="main">main</div>
+  <div class="main">
+    <textarea></textarea>
+  </div>
   <script>
     export default {
       tag: "ocode-editor",

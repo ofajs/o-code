@@ -1,36 +1,73 @@
 <template component>
   <style>
     :host {
+      position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 40px;
-      padding: 0 16px 0 8px;
+      padding: 0 4px 0 8px;
       background-color: var(--main-pannel-color);
       border-bottom: var(--border-color) solid 1px;
+      cursor: pointer;
     }
 
     :host([selected]) {
       background-color: #1f1f1f;
       border-bottom: none;
+      cursor: default;
+    }
+
+    :host([selected]) .top-mark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background-color: var(--main-color);
     }
 
     ocode-file-item-inner::part(bg) {
       background-color: transparent;
     }
+
+    .close-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 4px;
+      margin: 0 0 0 5px;
+      border-radius: 4px;
+      cursor: pointer;
+      opacity: 0;
+    }
+
+    .close-btn:hover {
+      background-color: rgba(255, 255, 255, 0.06);
+      opacity: 0;
+    }
+    :host([selected]) .close-btn {
+      opacity: 1;
+    }
   </style>
   <inject-host>
     <style>
-      ocode-file-tab:hover {
+      ocode-file-tab:not([selected]):hover {
         background-color: rgba(255, 255, 255, 0.03);
       }
     </style>
   </inject-host>
   <l-m src="./file-item-inner.html"></l-m>
 
+  <div class="top-mark"></div>
+
   <ocode-file-item-inner :name="name">
     <slot></slot>
   </ocode-file-item-inner>
+
+  <div class="close-btn">
+    <iconify-icon icon="material-symbols:close"></iconify-icon>
+  </div>
 
   <script>
     export default {
