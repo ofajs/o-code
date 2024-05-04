@@ -47,7 +47,9 @@
       background-color: rgba(255, 255, 255, 0.06);
       opacity: 0;
     }
-    :host([selected]) .close-btn {
+
+    :host([selected]) .close-btn,
+    :host(*:hover) .close-btn {
       opacity: 1;
     }
   </style>
@@ -65,7 +67,7 @@
     <slot></slot>
   </ocode-file-item-inner>
 
-  <div class="close-btn">
+  <div class="close-btn" on:click="clickClose">
     <iconify-icon icon="material-symbols:close"></iconify-icon>
   </div>
 
@@ -74,7 +76,20 @@
       tag: "ocode-file-tab",
       attrs: {
         name: "",
+        path: null,
         selected: null,
+      },
+      proto: {
+        clickClose(e) {
+          e.stopPropagation();
+          this.emit("click-close", {
+            bubbles: false,
+            data: {
+              name: this.name,
+              path: this.path,
+            },
+          });
+        },
       },
       watch: {},
       ready() {},

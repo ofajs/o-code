@@ -144,8 +144,10 @@
         <ocode-file-tab
           attr:name="$data.name"
           attr:selected="$host.selectedFilePath === $data.path ? '' : null"
+          :path="$data.path"
           on:click="$host.clickTab($data,$event)"
           class:not-resident="$data.notResident"
+          on:click-close="$host.clickTabClose($event)"
         ></ocode-file-tab>
       </x-fill>
 

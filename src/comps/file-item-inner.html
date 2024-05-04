@@ -94,6 +94,10 @@
       },
       watch: {
         name(name) {
+          if (!name) {
+            return;
+          }
+
           if (this.folder !== null) {
             this.iconname = "mingcute:right-fill";
             return;
@@ -130,7 +134,7 @@
             case "json":
               iconname = "ph:brackets-curly-bold";
               size = "16px";
-              iconcolor = "#cdca4c";
+              iconcolor = "#b4b247";
               break;
             case "md":
               iconname = "material-symbols:markdown";

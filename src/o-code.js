@@ -72,6 +72,13 @@ export default async ({ load }) => {
           }
         }
       },
+      clickTabClose(event) {
+        const index = this.tabs.findIndex((e) => e.path === event.data.path);
+
+        if (index > -1) {
+          this.tabs.splice(index, 1);
+        }
+      },
       clickItem(data, event) {
         event.stopPropagation();
 
