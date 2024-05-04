@@ -81,16 +81,13 @@
   .main-tabs {
     display: flex;
     width: 100%;
+    min-height: 40px;
+    flex-wrap: wrap;
+    background-color: var(--main-pannel-color);
   }
 
   .code-area {
     flex: 1;
-  }
-
-  .tab-right {
-    flex: 1;
-    background-color: var(--main-pannel-color);
-    border-bottom: var(--border-color) solid 1px;
   }
 
   .not-resident {
@@ -117,6 +114,18 @@
       <iconify-icon
         icon="material-symbols:search"
         style="font-size: 30px"
+      ></iconify-icon>
+    </div>
+
+    <div
+      class="left-block"
+      name="Preview"
+      class:active="activeName === 'Preview'"
+      on:click="activeName = 'Preview'"
+    >
+      <iconify-icon
+        icon="icon-park-outline:preview-open"
+        style="font-size: 26px"
       ></iconify-icon>
     </div>
   </div>
@@ -150,8 +159,6 @@
           on:click-close="$host.clickTabClose($event)"
         ></ocode-file-tab>
       </x-fill>
-
-      <div class="tab-right"></div>
     </div>
     <div class="code-area">
       <ocode-editor></ocode-editor>
