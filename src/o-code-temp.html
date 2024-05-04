@@ -124,7 +124,7 @@
       <ocode-file-item
         attr:name="$data.name"
         attr:folder="$data.folder ? $data.folder : null"
-        attr:selected="$data.selected ? '' : null"
+        attr:selected="$data.path === $host.selectedFilePath ? '' : null"
         on:click="$host.clickItem($data,$event)"
         on:dblclick="$host.dblclickItem($data,$event)"
       >
@@ -136,9 +136,14 @@
   </div>
   <div class="main-pannel">
     <div class="main-tabs">
-      <ocode-file-tab name="test1.css"></ocode-file-tab>
-      <ocode-file-tab name="test2.css" selected></ocode-file-tab>
-      <ocode-file-tab name="test3.css"></ocode-file-tab>
+      <x-fill :value="tabs">
+        <ocode-file-tab
+          attr:name="$data.name"
+          attr:selected="$host.selectedFilePath === $data.path ? '' : null"
+          on:click="$host.clickTab($data,$event)"
+        ></ocode-file-tab>
+      </x-fill>
+
       <div class="tab-right"></div>
     </div>
     <div class="code-area">
