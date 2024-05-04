@@ -22,6 +22,7 @@
     /* @container style(--hide-item:1) {
       .container {
         height: 0;
+        opacity:0;
       }
     } */
 
@@ -72,13 +73,12 @@
     }
   </style>
   <div class="container" part="container">
-    <div class="bg-con"></div>
+    <div class="bg-con" part="bg"></div>
     <div class="icon-con">
       <iconify-icon attr:icon="iconname" :css.font-size="size"></iconify-icon>
     </div>
     <div>{{name}}</div>
   </div>
-  <div class="hover-bg"></div>
   <div class="childs">
     <slot></slot>
   </div>

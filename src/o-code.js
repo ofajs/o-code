@@ -56,10 +56,6 @@ export default async ({ load }) => {
           return;
         }
 
-        if (data.list) {
-          return;
-        }
-
         // 将原来激活的项目都清空
         this.shadow
           .all("file-item[selected]")

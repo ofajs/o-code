@@ -1,10 +1,4 @@
 <template component>
-  <style>
-    :host {
-      display: block;
-    }
-  </style>
-  <l-m src="./file-item-inner.html"></l-m>
   <inject-host>
     <style>
       file-item[folder="2"] file-item {
@@ -13,12 +7,7 @@
       }
     </style>
   </inject-host>
-  <file-item-inner
-    :folder="folder"
-    :name="name"
-    part="item"
-    attr:selected="selected"
-  >
+  <file-item-inner :folder="folder" :name="name" attr:selected="selected">
     <slot></slot>
   </file-item-inner>
   <script>

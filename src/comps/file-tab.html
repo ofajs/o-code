@@ -1,0 +1,46 @@
+<template component>
+  <style>
+    :host {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 40px;
+      padding: 0 16px 0 8px;
+      background-color: var(--main-pannel-color);
+      border-bottom: var(--border-color) solid 1px;
+    }
+
+    :host([selected]) {
+      background-color: #1f1f1f;
+      border-bottom: none;
+    }
+
+    file-item-inner::part(bg) {
+      background-color: transparent;
+    }
+  </style>
+  <inject-host>
+    <style>
+      file-tab:hover {
+        background-color: rgba(255, 255, 255, 0.03);
+      }
+    </style>
+  </inject-host>
+  <l-m src="./file-item-inner.html"></l-m>
+
+  <file-item-inner :name="name">
+    <slot></slot>
+  </file-item-inner>
+
+  <script>
+    export default {
+      tag: "file-tab",
+      attrs: {
+        name: "",
+        selected: null,
+      },
+      watch: {},
+      ready() {},
+    };
+  </script>
+</template>
