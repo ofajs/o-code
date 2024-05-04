@@ -77,6 +77,14 @@ export default async ({ load }) => {
 
         if (index > -1) {
           this.tabs.splice(index, 1);
+
+          if (this.tabs[index]) {
+            this.selectedFilePath = this.tabs[index].path;
+          } else if (this.tabs.length) {
+            this.selectedFilePath = this.tabs.slice(-1)[0].path;
+          } else {
+            this.selectedFilePath = "";
+          }
         }
       },
       clickItem(data, event) {
