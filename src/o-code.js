@@ -2,48 +2,52 @@ export const type = $.COMP;
 
 export const temp = "./o-code-temp.html";
 
-const testlist = [
-  {
-    name: "o-code",
-    path: "o-code",
-    folder: 1,
-    list: [
-      {
-        name: "demo.html",
-        path: "o-code/demo.html",
-      },
-      {
-        name: "code.js",
-        path: "o-code/code.js",
-      },
-      {
-        name: "code2.css",
-        path: "o-code/code2.css",
-      },
-      {
-        name: "test-dir",
-        folder: 1,
-        list: [
-          {
-            name: "code3.json",
-            path: "o-code/test-dir/code3.json",
-          },
-          {
-            name: "code4.md",
-            path: "o-code/test-dir/code4.md",
-          },
-        ],
-      },
-    ],
-  },
-];
+const testPackData = {
+  defaultSelectedPath: "o-code/code2.css",
+  list: [
+    {
+      name: "o-code",
+      path: "o-code",
+      folder: 1,
+      list: [
+        {
+          name: "demo.html",
+          path: "o-code/demo.html",
+        },
+        {
+          name: "code.js",
+          path: "o-code/code.js",
+        },
+        {
+          name: "code2.css",
+          path: "o-code/code2.css",
+        },
+        {
+          name: "test-dir",
+          folder: 1,
+          list: [
+            {
+              name: "code3.json",
+              path: "o-code/test-dir/code3.json",
+            },
+            {
+              name: "code4.md",
+              path: "o-code/test-dir/code4.md",
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
 
 export default async ({ load }) => {
   return {
     tag: "o-code",
     data: {
       activeName: "Files",
-      list: [...testlist],
+      list: [...testPackData.list],
+      // list: [],
       tabs: [],
       selectedFilePath: "",
     },
@@ -113,6 +117,34 @@ export default async ({ load }) => {
           }
         }
       },
+    },
+    ready() {
+      let targetItem = null;
+
+      const findItem = (list, path) => {
+        return list.find((e) => {
+          if (e.list) {
+            return findItem(e.list, path);
+          }
+
+          if (e.path === path) {
+            targetItem = e;
+            return true;
+          }
+
+          return false;
+        });
+      };
+
+      findItem(testPackData.list, testPackData.defaultSelectedPath);
+
+      this.tabs.push({
+        name: targetItem.name,
+        path: targetItem.path,
+        notResident: 1, // 未常驻的状态
+      });
+
+      this.selectedFilePath = testPackData.defaultSelectedPath;
     },
   };
 };
