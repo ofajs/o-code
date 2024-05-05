@@ -1,0 +1,23 @@
+<template page>
+  <style>
+    :host {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+    }
+  </style>
+  <div style="height: 20vh"></div>
+  <p>可以拖拽文件夹到这个网页上</p>
+  <p>
+    或者点击右边的按钮选择本地文件夹打开 <input type="file" webkitdirectory />
+  </p>
+  <script>
+    export default async ({ load }) => {
+      return {
+        data: {},
+        proto: {},
+      };
+    };
+  </script>
+</template>

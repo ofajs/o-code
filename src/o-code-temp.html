@@ -160,7 +160,12 @@
       </x-fill>
     </div>
     <div class="code-area">
-      <ocode-editor></ocode-editor>
+      <x-if :value="tabs.length">
+        <ocode-editor></ocode-editor>
+      </x-if>
+      <x-else>
+        <o-page src="./start-page.html"></o-page>
+      </x-else>
     </div>
   </div>
 </div>
