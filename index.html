@@ -3,11 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>o-code demo</title>
+    <title>o-code</title>
     <script
       src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.14/dist/ofa.min.js"
       debug
     ></script>
+    <script type="module" src="https://os.kirakiray.com/os/init.js"></script>
     <!-- <script
       src="http://127.0.0.1:3349/packages/ofa/main.mjs"
       type="module"
@@ -25,5 +26,20 @@
   <body>
     <l-m src="../src/o-code.js"></l-m>
     <o-code fullscreen></o-code>
+    <script>
+      navigator.serviceWorker
+        .register("/sw.js", {
+          scope: "/",
+        })
+        .then((reg) => {
+          // reg.update();
+          setTimeout(() => {
+            reg.update();
+          }, 60 * 60 * 1000);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    </script>
   </body>
 </html>

@@ -10,13 +10,32 @@
   <div style="height: 20vh"></div>
   <p>可以拖拽文件夹到这个网页上</p>
   <p>
-    或者点击右边的按钮选择本地文件夹打开 <input type="file" webkitdirectory />
+    或者点击右边的按钮选择本地文件夹打开
+    <input type="file" webkitdirectory on:change="selectDir" />
   </p>
   <script>
     export default async ({ load }) => {
+      const { get } = await load("@nos/core/fs/local/main.js");
+
       return {
         data: {},
-        proto: {},
+        proto: {
+          async selectDir(event) {
+            await Promise.all(
+              Array.from(event.target.files).map(async (file) => {
+                const { name, webkitRelativePath } = file;
+
+                const fileHandle = await get(webkitRelativePath, {
+                  create: "file",
+                });
+
+                await fileHandle.write(file);
+              })
+            );
+
+            alert("导入成功");
+          },
+        },
       };
     };
   </script>
