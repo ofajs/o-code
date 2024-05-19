@@ -15,6 +15,7 @@
       opacity: var(--item-opacity, 1);
       font-weight: 500;
       transition: all ease 0.2s;
+      overflow: hidden;
     }
 
     /* @container style(--hide-item:1) {
@@ -47,6 +48,7 @@
       background-color: rgba(0, 102, 255, 0.3);
       border: rgba(0, 102, 255, 1) solid 1px;
     }
+
     .icon-con {
       display: flex;
       align-items: center;
@@ -54,13 +56,13 @@
     }
 
     .childs {
-      --sub-space-left: calc(var(--space-left) * 2);
+      --sub-space-left: calc(var(--space-left) + 12px);
     }
 
-    :host([folder="1"]) iconify-icon {
+    :host([folder="open"]) iconify-icon {
       transform: rotate(90deg);
     }
-    :host([folder="2"]) iconify-icon {
+    :host([folder="close"]) iconify-icon {
       transform: rotate(0deg);
     }
   </style>

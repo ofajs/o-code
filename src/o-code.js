@@ -1,52 +1,10 @@
 export const type = $.COMP;
 
-export const temp = "./o-code-temp.html";
-
-// const testPackageData = {
-//   defaultSelectedPath: "o-code/code2.css",
-//   list: [
-//     {
-//       name: "o-code",
-//       path: "o-code",
-//       folder: 1,
-//       list: [
-//         {
-//           name: "demo.html",
-//           path: "o-code/demo.html",
-//         },
-//         {
-//           name: "code.js",
-//           path: "o-code/code.js",
-//         },
-//         {
-//           name: "code2.css",
-//           path: "o-code/code2.css",
-//         },
-//         {
-//           name: "test-dir",
-//           folder: 1,
-//           list: [
-//             {
-//               name: "code3.json",
-//               path: "o-code/test-dir/code3.json",
-//             },
-//             {
-//               name: "code4.md",
-//               path: "o-code/test-dir/code4.md",
-//             },
-//           ],
-//         },
-//       ],
-//     },
-//   ],
-// };
-
-// const testPackageData = {
-//   defaultSelectedPath: "",
-//   list: [],
-// };
+import { getListData } from "./util.js";
 
 export default async ({ load }) => {
+  const { get } = await load("@nos/core/fs/local/main.js");
+
   return {
     tag: "o-code",
     data: {
@@ -121,6 +79,7 @@ export default async ({ load }) => {
           }
         }
       },
+      // 初始化项目
       initProject(packageData) {
         this.list = packageData.list;
 
@@ -153,7 +112,33 @@ export default async ({ load }) => {
         }
       },
     },
-    ready() {
+    async ready() {
+      // 读取目标目录
+      const searchParams = new URLSearchParams(location.search);
+
+      const needOpen = searchParams.get("open");
+
+      if (needOpen) {
+        // 打开本地目录
+        const targetFolder = await get(needOpen);
+
+        const list = await getListData(targetFolder);
+
+        this.initProject({
+          defaultSelectedPath: "",
+          list: [
+            {
+              name: targetFolder.name,
+              path: targetFolder.name,
+              loaded: true,
+              folder: "open",
+              list,
+            },
+          ],
+        });
+        return;
+      }
+
       // this.initProject(testPackageData);
       this.initProject({
         defaultSelectedPath: "",

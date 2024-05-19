@@ -30,6 +30,7 @@
       navigator.serviceWorker
         .register("/sw.js", {
           scope: "/",
+          type: "module",
         })
         .then((reg) => {
           // reg.update();

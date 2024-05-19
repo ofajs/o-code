@@ -1,2 +1,3 @@
-// importScripts("http://localhost:5559/sw.js");
-importScripts("https://os.kirakiray.com/sw-bundle.js");
+// importScripts("http://localhost:5559/sw-bundle.js");
+import "http://localhost:5559/sw.js";
+// importScripts("https://os.kirakiray.com/sw-bundle.js");

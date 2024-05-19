@@ -7,7 +7,7 @@
   </style>
   <inject-host>
     <style>
-      ocode-file-item[folder="2"] ocode-file-item {
+      ocode-file-item[folder="close"] ocode-file-item {
         --item-height: 0px;
         --item-opacity: 0;
       }
@@ -17,6 +17,8 @@
     <slot></slot>
   </ocode-file-item-inner>
   <script>
+    import { getListData } from "../util.js";
+
     export default {
       tag: "ocode-file-item",
       attrs: {
@@ -26,19 +28,31 @@
       },
       watch: {},
       ready() {
-        this.on("click", () => {
+        this.on("click", async () => {
           if (this.folder !== null) {
-            if (this?.__item?.$data) {
-              if (this.folder == "1") {
-                this.__item.$data.folder = "2";
+            const data = this?.__item?.$data;
+            if (data) {
+              if (this.folder == "open") {
+                data.folder = "close";
               } else {
-                this.__item.$data.folder = "1";
+                if (!data.loaded) {
+                  // 读取目录内的数据
+                  data.list = await getListData(data._handle);
+                  data.loaded = true;
+
+                  setTimeout(() => {
+                    // 延迟打开才会有动画
+                    data.folder = "open";
+                  }, 50);
+                } else {
+                  data.folder = "open";
+                }
               }
             } else {
-              if (this.folder == "1") {
-                this.folder = "2";
+              if (this.folder == "open") {
+                this.folder = "close";
               } else {
-                this.folder = "1";
+                this.folder = "open";
               }
             }
           }
