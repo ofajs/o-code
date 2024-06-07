@@ -35,7 +35,10 @@
 
       return {
         tag: "monaco-editor",
-        data: {},
+        attrs: {
+          defaultValue: "",
+          theme: null,
+        },
         proto: {
           set value(val) {
             this._value = val;
@@ -44,17 +47,30 @@
           get value() {
             return this._editor.getValue();
           },
+          init(options) {
+            if (this._editor) {
+              this._editor.dispose();
+              this.shadow.$("#editor").html = "";
+            }
+
+            const editor =
+              (this._editor =
+              this.ele._editor =
+                monaco.editor.create(this.shadow.$("#editor").ele, {
+                  value:
+                    this.defaultValue ||
+                    'console.log("Hello, Monaco Editor!");',
+                  language: "javascript",
+                  theme: this.theme,
+                  fontSize: 14,
+                  ...options,
+                }));
+
+            return editor;
+          },
         },
-        ready() {},
         attached() {
-          const editor =
-            (this._editor =
-            this.ele._editor =
-              monaco.editor.create(this.shadow.$("#editor").ele, {
-                value: this._value || 'console.log("Hello, Monaco Editor!");',
-                language: "javascript",
-                theme: "vs-dark",
-              }));
+          this.init();
         },
       };
     };
