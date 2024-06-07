@@ -4,10 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>o-code</title>
-    <script
+    <!-- <script
       src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.14/dist/ofa.min.js"
       debug
-    ></script>
+    ></script> -->
+    <script
+    src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.14/dist/ofa.min.mjs"
+    type="module"
+  ></script>
     <script type="module" src="https://os.kirakiray.com/os/init.js"></script>
     <style>
       html,
@@ -20,7 +24,7 @@
     </style>
   </head>
   <body>
-    <l-m src="./src/o-code.js"></l-m>
+    <l-m src="./src/o-code.html"></l-m>
     <o-code fullscreen></o-code>
     <script>
       navigator.serviceWorker

@@ -1,171 +1,110 @@
-<l-m
-  src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"
-></l-m>
-<l-m src="./comps/file-item.html"></l-m>
-<l-m src="./comps/file-tab.html"></l-m>
-<l-m src="./comps/code-editor.html"></l-m>
-<style>
-  :host {
-    display: block;
-    color: #ccc;
-    --main-color: #2175f3;
-    --left-tab-size: 55px;
-    --left-tab-color: #868686;
-    --left-tab-active-color: #fff;
-    --border-color: #2b2b2b;
-    --main-pannel-color: #181818;
-    background-color: var(--main-pannel-color);
-  }
+<template component>
+  <l-m
+    src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"
+  ></l-m>
+  <style>
+    :host {
+      display: block;
+      color: #ccc;
+      --main-color: #2175f3;
+      --left-tab-size: 55px;
+      --left-tab-color: #868686;
+      --left-tab-active-color: #fff;
+      --border-color: #2b2b2b;
+      --main-pannel-color: #181818;
+      background-color: var(--main-pannel-color);
+    }
 
-  :host([fullscreen]) {
-    width: 100%;
-    height: 100%;
-  }
-  .container {
-    display: flex;
-    width: 100%;
-    height: 100%;
-  }
-  .left-tabs {
-    width: var(--left-tab-size);
-    border-right: var(--border-color) solid 1px;
-  }
-  .left-block {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: var(--left-tab-size);
-    cursor: pointer;
-    color: var(--left-tab-color);
-  }
-  .left-block:before {
-    display: block;
-    width: 0px;
-    height: 100%;
-    background-color: var(--main-color);
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    transition: width ease 0.1s;
-  }
-  .left-block.active:before {
-    width: 2px;
-  }
-  .left-block.active,
-  .left-block:hover {
-    color: var(--left-tab-active-color);
-  }
+    :host([fullscreen]) {
+      width: 100%;
+      height: 100%;
+    }
+    .container {
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
+    .left-tabs {
+      width: var(--left-tab-size);
+      border-right: var(--border-color) solid 1px;
+    }
+    .left-block {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: var(--left-tab-size);
+      cursor: pointer;
+      color: var(--left-tab-color);
+    }
+    .left-block:before {
+      display: block;
+      width: 0px;
+      height: 100%;
+      background-color: var(--main-color);
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      transition: width ease 0.1s;
+    }
+    .left-block.active:before {
+      width: 2px;
+    }
+    .left-block.active,
+    .left-block:hover {
+      color: var(--left-tab-active-color);
+    }
+  </style>
 
-  .second-pannel {
-    width: 300px;
-    border-right: var(--border-color) solid 1px;
-    overflow: auto;
-  }
-
-  .second-pannel h4 {
-    margin: 12px 0 4px 12px;
-    padding: 0;
-    font-size: 12px;
-  }
-
-  .main-pannel {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    flex: 1;
-    background-color: #1f1f1f;
-  }
-
-  .main-tabs {
-    display: flex;
-    width: 100%;
-    flex-wrap: wrap;
-    background-color: var(--main-pannel-color);
-  }
-
-  .code-area {
-    flex: 1;
-  }
-
-  .not-resident {
-    font-style: italic;
-  }
-</style>
-
-<div class="container">
-  <div class="left-tabs">
-    <div
-      class="left-block active"
-      class:active="activeName === 'Files'"
-      name="Files"
-      on:click="activeName = 'Files'"
-    >
-      <iconify-icon icon="mdi:files" style="font-size: 22px"></iconify-icon>
-    </div>
-    <div
-      class="left-block"
-      name="Search"
-      class:active="activeName === 'Search'"
-      on:click="activeName = 'Search'"
-    >
-      <iconify-icon
-        icon="material-symbols:search"
-        style="font-size: 30px"
-      ></iconify-icon>
-    </div>
-
-    <div
-      class="left-block"
-      name="Preview"
-      class:active="activeName === 'Preview'"
-      on:click="activeName = 'Preview'"
-    >
-      <iconify-icon
-        icon="icon-park-outline:preview-open"
-        style="font-size: 26px"
-      ></iconify-icon>
-    </div>
-  </div>
-  <div class="second-pannel">
-    <h4>资源管理器</h4>
-    <x-fill :value="list" name="file-item"></x-fill>
-
-    <template name="file-item">
-      <ocode-file-item
-        attr:name="$data.name"
-        attr:folder="$data.folder ? $data.folder : null"
-        attr:selected="$data.path === $host.selectedFilePath ? '' : null"
-        on:click="$host.clickItem($data,$event)"
-        on:dblclick="$host.dblclickItem($data,$event)"
+  <div class="container">
+    <div class="left-tabs">
+      <div
+        class="left-block active"
+        class:active="activeName === 'Files'"
+        name="Files"
+        on:click="activeName = 'Files'"
       >
-        <x-if :value="$data.list">
-          <x-fill :value="$data.list" name="file-item"></x-fill>
-        </x-if>
-      </ocode-file-item>
-    </template>
-  </div>
-  <div class="main-pannel">
-    <div class="main-tabs">
-      <x-fill :value="tabs">
-        <ocode-file-tab
-          attr:name="$data.name"
-          attr:selected="$host.selectedFilePath === $data.path ? '' : null"
-          :path="$data.path"
-          on:click="$host.clickTab($data,$event)"
-          class:not-resident="$data.notResident"
-          on:click-close="$host.clickTabClose($event)"
-        ></ocode-file-tab>
-      </x-fill>
+        <iconify-icon icon="mdi:files" style="font-size: 22px"></iconify-icon>
+      </div>
+      <div
+        class="left-block"
+        name="Preview"
+        class:active="activeName === 'Preview'"
+        on:click="activeName = 'Preview'"
+      >
+        <iconify-icon
+          icon="material-symbols:preview"
+          style="font-size: 26px"
+        ></iconify-icon>
+      </div>
+      <div
+        class="left-block"
+        name="Search"
+        class:active="activeName === 'Search'"
+        on:click="activeName = 'Search'"
+      >
+        <iconify-icon
+          icon="material-symbols:search"
+          style="font-size: 30px"
+        ></iconify-icon>
+      </div>
     </div>
-    <div class="code-area">
-      <x-if :value="tabs.length">
-        <ocode-editor :selected-path="selectedFilePath"></ocode-editor>
-      </x-if>
-      <x-else>
-        <o-page src="./start-page.html"></o-page>
-      </x-else>
-    </div>
+    <o-page src="./pages/main.html" style="flex: 1"></o-page>
   </div>
-</div>
+
+  <script>
+    export default async ({ load }) => {
+      const { get } = await load("@nos/core/fs/local/main.js");
+
+      return {
+        tag: "o-code",
+        data: {
+          activeName: "Files",
+        },
+        proto: {},
+        async ready() {},
+      };
+    };
+  </script>
+</template>
