@@ -1,0 +1,62 @@
+<template component>
+  <style>
+    :host {
+      display: block;
+      height: 100%;
+    }
+    #editor {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+  <link
+    rel="stylesheet"
+    type="text/css"
+    data-name="vs/editor/editor.main"
+    href="https://cdn.jsdelivr.net/npm/monaco-editor/min/vs/editor/editor.main.css"
+  />
+  <div id="editor"></div>
+  <script>
+    export default async ({ load }) => {
+      await new Promise((resolve) => {
+        // Monoco Editor 的基础配置
+        const script = document.createElement("script");
+        script.src = `https://cdn.jsdelivr.net/npm/monaco-editor/min/vs/loader.js`;
+        $("head").push(script);
+
+        script.addEventListener("load", () => {
+          require.config({
+            paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor/min/vs" },
+          });
+
+          require(["vs/editor/editor.main"], () => resolve());
+        });
+      });
+
+      return {
+        tag: "monaco-editor",
+        data: {},
+        proto: {
+          set value(val) {
+            this._value = val;
+            this._editor.setValue(val);
+          },
+          get value() {
+            return this._editor.getValue();
+          },
+        },
+        ready() {},
+        attached() {
+          const editor =
+            (this._editor =
+            this.ele._editor =
+              monaco.editor.create(this.shadow.$("#editor").ele, {
+                value: this._value || 'console.log("Hello, Monaco Editor!");',
+                language: "javascript",
+                theme: "vs-dark",
+              }));
+        },
+      };
+    };
+  </script>
+</template>
