@@ -111,6 +111,34 @@ export default async ({ load }) => {
           this.selectedFilePath = packageData.defaultSelectedPath;
         }
       },
+      restoreTabs() {
+        // 初始化刷新前激活中的tab
+        if (sessionStorage.__actives_path) {
+          const { tabs, selectedFilePath } = JSON.parse(
+            sessionStorage.__actives_path
+          );
+
+          this.tabs = tabs;
+          this.selectedFilePath = selectedFilePath;
+        }
+
+        this.__inited = 1;
+      },
+    },
+    watch: {
+      ["tabs,selectedFilePath"]() {
+        if (!this.__inited) {
+          return;
+        }
+
+        // 记录激活中的地址
+        const { tabs, selectedFilePath } = this;
+
+        sessionStorage.__actives_path = JSON.stringify({
+          tabs,
+          selectedFilePath,
+        });
+      },
     },
     async ready() {
       // 读取目标目录
@@ -136,6 +164,8 @@ export default async ({ load }) => {
             },
           ],
         });
+
+        this.restoreTabs();
         return;
       }
 
