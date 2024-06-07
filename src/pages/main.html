@@ -70,7 +70,7 @@
           :path="$data.path"
           on:click="$host.clickTab($data,$event)"
           class:not-resident="$data.notResident"
-          on:click-close="$host.clickTabClose($event)"
+          on:click-close="$host.clickTabClose($index)"
         ></ocode-file-tab>
       </x-fill>
     </div>
@@ -135,11 +135,7 @@
               }
             }
           },
-          clickTabClose(event) {
-            const index = this.tabs.findIndex(
-              (e) => e.path === event.data.path
-            );
-
+          clickTabClose(index) {
             if (index > -1) {
               this.tabs.splice(index, 1);
 
@@ -224,7 +220,6 @@
             this.__inited = 1;
           },
         },
-
         async ready() {
           // 读取目标目录
           const searchParams = new URLSearchParams(location.search);
@@ -258,6 +253,33 @@
             defaultSelectedPath: "", // 默认选择中的文件路径
             list: [], // 文件夹列表
           });
+        },
+        attached() {
+          // 添加快捷键
+          window.addEventListener(
+            "keydown",
+            (this._key_fun = (event) => {
+              if (event.metaKey || event.ctrlKey) {
+                if (event.key === "s") {
+                  event.preventDefault();
+                  // 保存
+                } else if (event.key === "w") {
+                  event.preventDefault();
+                  // 关闭标签
+                  const targetTabIndex = this.tabs.findIndex(
+                    (e) => e.path === this.selectedFilePath
+                  );
+
+                  if (targetTabIndex > -1) {
+                    this.clickTabClose(targetTabIndex);
+                  }
+                }
+              }
+            })
+          );
+        },
+        detached() {
+          window.removeEventListener("keydown", this._key_fun);
         },
       };
     };
