@@ -25,16 +25,35 @@
     }
   </style>
   <div class="main">
-    <textarea></textarea>
+    <textarea>
+      asdasd
+    </textarea>
   </div>
   <script>
-    export default {
-      tag: "ocode-editor",
-      attrs: {
-        codetype: "",
-      },
-      data: {},
-      ready() {},
+    export default async ({ load }) => {
+      const { get } = await load("@nos/core/fs/local/main.js");
+
+      return {
+        tag: "ocode-editor",
+        attrs: {
+          codetype: "",
+        },
+        data: {
+          selectedPath: "",
+        },
+        watch: {
+          async selectedPath(path) {
+            if (!path) {
+              return;
+            }
+            const handle = await get(path.split("/").slice(1).join("/"));
+            const data = await handle.text();
+
+            this.shadow.$("textarea").text = data;
+          },
+        },
+        ready() {},
+      };
     };
   </script>
 </template>

@@ -8,11 +8,11 @@
     }
   </style>
   <div style="height: 20vh"></div>
-  <p>可以拖拽文件夹到这个网页上</p>
+  <!-- <p>可以拖拽文件夹到这个网页上</p>
   <p>
     或者点击右边的按钮选择本地文件夹打开
     <input type="file" webkitdirectory on:change="importFiles" />
-  </p>
+  </p> -->
   <script>
     export default async ({ load }) => {
       const { get } = await load("@nos/core/fs/local/main.js");
@@ -21,31 +21,26 @@
         data: {},
         proto: {
           // 引入文件夹
-          async importFiles(event) {
-            await Promise.all(
-              Array.from(event.target.files).map(async (file) => {
-                const { name, webkitRelativePath } = file;
-
-                if (webkitRelativePath.split("/").find((e) => /^\./.test(e))) {
-                  // 跳过隐藏文件或文件夹
-                  return;
-                }
-
-                if (webkitRelativePath.includes("node_modules")) {
-                  // 跳过依赖文件夹
-                  return;
-                }
-
-                const fileHandle = await get(webkitRelativePath, {
-                  create: "file",
-                });
-
-                await fileHandle.write(file);
-              })
-            );
-
-            console.log("导入成功");
-          },
+          // async importFiles(event) {
+          //   await Promise.all(
+          //     Array.from(event.target.files).map(async (file) => {
+          //       const { name, webkitRelativePath } = file;
+          //       if (webkitRelativePath.split("/").find((e) => /^\./.test(e))) {
+          //         // 跳过隐藏文件或文件夹
+          //         return;
+          //       }
+          //       if (webkitRelativePath.includes("node_modules")) {
+          //         // 跳过依赖文件夹
+          //         return;
+          //       }
+          //       const fileHandle = await get(webkitRelativePath, {
+          //         create: "file",
+          //       });
+          //       await fileHandle.write(file);
+          //     })
+          //   );
+          //   console.log("导入成功");
+          // },
         },
       };
     };

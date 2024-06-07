@@ -139,10 +139,9 @@ export default async ({ load }) => {
         return;
       }
 
-      // this.initProject(testPackageData);
       this.initProject({
-        defaultSelectedPath: "",
-        list: [],
+        defaultSelectedPath: "", // 默认选择中的文件路径
+        list: [], // 文件夹列表
       });
     },
   };

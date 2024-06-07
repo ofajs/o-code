@@ -161,7 +161,7 @@
     </div>
     <div class="code-area">
       <x-if :value="tabs.length">
-        <ocode-editor></ocode-editor>
+        <ocode-editor :selected-path="selectedFilePath"></ocode-editor>
       </x-if>
       <x-else>
         <o-page src="./start-page.html"></o-page>
