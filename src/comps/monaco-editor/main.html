@@ -57,6 +57,7 @@
               (this._editor =
               this.ele._editor =
                 monaco.editor.create(this.shadow.$("#editor").ele, {
+                  // https://microsoft.github.io/monaco-editor/docs.html#interfaces/editor.IStandaloneEditorConstructionOptions.html
                   value:
                     this.defaultValue ||
                     'console.log("Hello, Monaco Editor!");',

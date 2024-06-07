@@ -110,6 +110,11 @@
 
           const pArr = this.name.split(".");
           if (pArr.length === 1) {
+            if (this.name === "LICENSE") {
+              this.iconname = "mdi:license";
+              this.iconcolor = "#cdca4c";
+              return;
+            }
             this.iconname = "insert-drive-file-outlined";
             return;
           }
