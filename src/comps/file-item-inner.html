@@ -115,13 +115,13 @@
               this.iconcolor = "#cdca4c";
               return;
             }
-            this.iconname = "insert-drive-file-outlined";
+            this.iconname = "mdi:file-outline";
             return;
           }
 
           const suffix = pArr[pArr.length - 1];
 
-          let iconname = "insert-drive-file-outlined";
+          let iconname = "mdi:file-outline";
           let size = "18px";
           let iconcolor = null;
 
@@ -150,6 +150,21 @@
               iconname = "material-symbols:markdown";
               iconcolor = "#4e9bb9";
               break;
+            case "jpg":
+            case "jpeg":
+            case "png":
+            case "svg":
+            case "bmp":
+            case "webp":
+              iconname = "material-symbols:image-outline";
+              iconcolor = "#9f76c2";
+              break;
+            case "gif":
+              iconname = "mage:gif";
+              break;
+            case "mp4":
+            case "webm":
+              iconname = "mdi:video-outline";
             default:
               iconname = "mdi:file-outline";
           }

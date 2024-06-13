@@ -1,7 +1,7 @@
 <template page>
   <l-m src="../comps/file-item.html"></l-m>
   <l-m src="../comps/file-tab.html"></l-m>
-  <l-m src="../comps/code-editor.html"></l-m>
+  <l-m src="../comps/code-area.html"></l-m>
   <style>
     :host {
       display: flex;
@@ -77,11 +77,11 @@
     </div>
     <div class="code-area">
       <x-if :value="tabs.length">
-        <ocode-editor
+        <ocode-area
           :selected-path="selectedFilePath"
           on:change="changeValue"
           on:change-tab-status="changeTabStatus"
-        ></ocode-editor>
+        ></ocode-area>
       </x-if>
       <x-else>
         <o-page src="./start-page.html"></o-page>
@@ -165,7 +165,7 @@
               const old = this.tabs.splice(index, 1);
 
               // 清除编辑器的缓存内容
-              this.shadow.$("ocode-editor").clear(old[0].path);
+              this.shadow.$("ocode-area").clear(old[0].path);
 
               if (this.tabs[index]) {
                 this.selectedFilePath = this.tabs[index].path;
@@ -292,7 +292,7 @@
                 if (event.key === "s") {
                   // 保存
                   event.preventDefault();
-                  this.shadow.$("ocode-editor").save();
+                  this.shadow.$("ocode-area").save();
                 } else if (event.key === "w") {
                   // 关闭标签
                   event.preventDefault();

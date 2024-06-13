@@ -17,12 +17,23 @@
       width: 100%;
       height: 100%;
     }
+
+    .hide {
+      display: none !important;
+    }
   </style>
   <monaco-editor
+    class:hide="hideEditor"
     theme="vs-dark"
-    default-value=" "
+    default-value="Loading..."
     on:change="change"
   ></monaco-editor>
+  <x-if :value="hideEditor === 'pic'">
+    <img attr:src="'$' + selectedPath" />
+  </x-if>
+  <x-else-if :value="hideEditor === 'video'">
+    <video src="mdi:video-outline"></video>
+  </x-else-if>
   <script>
     export default async ({ load }) => {
       const { get } = await load("@nos/core/fs/local/main.js");
@@ -32,18 +43,39 @@
       const cacheOrigins = {};
 
       return {
-        tag: "ocode-editor",
+        tag: "ocode-area",
         attrs: {
           codetype: "",
         },
         data: {
           selectedPath: "",
+          hideEditor: false,
         },
         watch: {
           async selectedPath(path) {
             if (!path) {
               return;
             }
+
+            let language = path.split(".").slice(-1)[0];
+
+            // 图片的话直接打开
+            switch (language) {
+              case "jpg":
+              case "jpeg":
+              case "png":
+              case "bmp":
+              case "webp":
+              case "gif":
+                this.hideEditor = "pic";
+                return;
+              case "mp4":
+              case "webm":
+                this.hideEditor = "video";
+                break;
+            }
+
+            this.hideEditor = false;
 
             // 优先读取缓存的内容
             let content = "";
@@ -55,8 +87,6 @@
               content = await handle.text();
               cacheOrigins[path] = content;
             }
-
-            let language = path.split(".").slice(-1)[0];
 
             switch (language) {
               case "js":
