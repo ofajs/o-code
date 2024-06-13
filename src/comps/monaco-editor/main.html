@@ -67,11 +67,25 @@
                   ...options,
                 }));
 
+            editor.onDidChangeModelContent(() => {
+              const currentContent = editor.getValue();
+
+              this.emit("change", {
+                bubbles: false,
+                data: {
+                  value: currentContent,
+                },
+              });
+            });
+
             return editor;
           },
         },
         attached() {
           this.init();
+        },
+        detached() {
+          this._editor && this._editor.dispose();
         },
       };
     };

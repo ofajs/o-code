@@ -18,10 +18,18 @@
       height: 100%;
     }
   </style>
-  <monaco-editor theme="vs-dark" default-value=" "></monaco-editor>
+  <monaco-editor
+    theme="vs-dark"
+    default-value=" "
+    on:change="change"
+  ></monaco-editor>
   <script>
     export default async ({ load }) => {
       const { get } = await load("@nos/core/fs/local/main.js");
+
+      // 缓存中的文件内容
+      const cacheContents = {};
+      const cacheOrigins = {};
 
       return {
         tag: "ocode-editor",
@@ -36,10 +44,19 @@
             if (!path) {
               return;
             }
-            const handle = await get(path.split("/").slice(1).join("/"));
-            const data = await handle.text();
 
-            let language = handle.name.split(".").slice(-1)[0];
+            // 优先读取缓存的内容
+            let content = "";
+
+            if (path in cacheContents) {
+              content = cacheContents[path];
+            } else {
+              const handle = await this.getHandle(path);
+              content = await handle.text();
+              cacheOrigins[path] = content;
+            }
+
+            let language = path.split(".").slice(-1)[0];
 
             switch (language) {
               case "js":
@@ -51,9 +68,13 @@
                 break;
             }
 
-            const run = () => {
-              this.shadow.$("monaco-editor").init({
-                value: data,
+            const run = async () => {
+              const $editor = this.shadow.$("monaco-editor");
+
+              await $editor.watchUntil(() => !!$editor.init);
+
+              $editor.init({
+                value: content,
                 language,
               });
             };
@@ -64,6 +85,50 @@
             } else {
               run();
             }
+          },
+        },
+        proto: {
+          async getHandle(path) {
+            if (!path) {
+              path = this.selectedPath;
+            }
+
+            return await get(path.split("/").slice(1).join("/"));
+          },
+          // 保存文本的内容
+          async save() {
+            const handle = await this.getHandle();
+            const newContent = cacheContents[this.selectedPath];
+            await handle.write(newContent);
+
+            // 修正缓存的内容
+            cacheOrigins[this.selectedPath] = newContent;
+
+            this.emit("change-tab-status", {
+              data: {
+                path: this.selectedPath,
+                hasChange: false,
+              },
+            });
+          },
+          // 清除文本缓存
+          clear(path) {
+            delete cacheContents[path];
+            delete cacheOrigins[path];
+          },
+          // 文本改动后发送信号
+          change(event) {
+            const { value } = event.data;
+
+            // 记录临时缓存的内容
+            cacheContents[this.selectedPath] = value;
+
+            this.emit("change-tab-status", {
+              data: {
+                path: this.selectedPath,
+                hasChange: !(value === cacheOrigins[this.selectedPath]),
+              },
+            });
           },
         },
         ready() {},

@@ -53,6 +53,14 @@
     :host(*:hover) .close-btn {
       opacity: 1;
     }
+
+    .change-mark {
+      display: none;
+    }
+    
+    :host(.has-change) .change-mark {
+      display: inline-block;
+    }
   </style>
   <inject-host>
     <style>
@@ -67,6 +75,8 @@
   <ocode-file-item-inner :name="name">
     <slot></slot>
   </ocode-file-item-inner>
+
+  <div class="change-mark">*</div>
 
   <div class="close-btn" on:click="clickClose">
     <iconify-icon icon="material-symbols:close"></iconify-icon>

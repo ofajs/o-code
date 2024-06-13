@@ -70,13 +70,18 @@
           :path="$data.path"
           on:click="$host.clickTab($data,$event)"
           class:not-resident="$data.notResident"
+          class:has-change="$data.hasChange"
           on:click-close="$host.clickTabClose($index)"
         ></ocode-file-tab>
       </x-fill>
     </div>
     <div class="code-area">
       <x-if :value="tabs.length">
-        <ocode-editor :selected-path="selectedFilePath"></ocode-editor>
+        <ocode-editor
+          :selected-path="selectedFilePath"
+          on:change="changeValue"
+          on:change-tab-status="changeTabStatus"
+        ></ocode-editor>
       </x-if>
       <x-else>
         <o-page src="./start-page.html"></o-page>
@@ -105,12 +110,32 @@
             const { tabs, selectedFilePath } = this;
 
             sessionStorage.__actives_path = JSON.stringify({
-              tabs,
+              tabs: tabs.map((e) => {
+                return {
+                  ...e,
+                  hasChange: undefined,
+                };
+              }),
               selectedFilePath,
             });
           },
         },
         proto: {
+          changeTabStatus({ data }) {
+            const targetTab = this.tabs.find((e) => e.path === data.path);
+            targetTab.hasChange = data.hasChange;
+          },
+          changeValue(event) {
+            console.log("change: ", event.data.value);
+
+            // 找到激活中的tab，设置的星标
+            const targetTab = this.tabs.find(
+              (e) => e.path === this.selectedFilePath
+            );
+
+            targetTab.notResident = null;
+            targetTab.hasChange = true;
+          },
           clickTab(data) {
             this.selectedFilePath = data.path;
           },
@@ -137,7 +162,10 @@
           },
           clickTabClose(index) {
             if (index > -1) {
-              this.tabs.splice(index, 1);
+              const old = this.tabs.splice(index, 1);
+
+              // 清除编辑器的缓存内容
+              this.shadow.$("ocode-editor").clear(old[0].path);
 
               if (this.tabs[index]) {
                 this.selectedFilePath = this.tabs[index].path;
@@ -159,7 +187,7 @@
               );
 
               if (!exitedTab) {
-                // 查看是否有未常驻的，有的哈修改未常驻
+                // 查看是否有未常驻的
                 const notResTab = this.tabs.find((e) => e.notResident);
                 if (notResTab) {
                   notResTab.name = data.name;
@@ -169,6 +197,7 @@
                     name: data.name,
                     path: data.path,
                     notResident: 1, // 未常驻的状态
+                    hasChange: null,
                   });
                 }
               }
@@ -261,11 +290,12 @@
             (this._key_fun = (event) => {
               if (event.metaKey || event.ctrlKey) {
                 if (event.key === "s") {
-                  event.preventDefault();
                   // 保存
-                } else if (event.key === "w") {
                   event.preventDefault();
+                  this.shadow.$("ocode-editor").save();
+                } else if (event.key === "w") {
                   // 关闭标签
+                  event.preventDefault();
                   const targetTabIndex = this.tabs.findIndex(
                     (e) => e.path === this.selectedFilePath
                   );
