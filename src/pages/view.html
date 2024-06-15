@@ -1,0 +1,173 @@
+<template page>
+  <l-m src="../comps/file-item-inner.html"></l-m>
+  <style>
+    :host {
+      display: flex;
+      height: 100%;
+    }
+    .second-pannel {
+      width: 300px;
+      border-right: var(--border-color) solid 1px;
+      overflow: auto;
+    }
+
+    .second-pannel h4 {
+      display: flex;
+      align-items: center;
+      padding: 12px 0 4px 12px;
+      margin: 0;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      font-size: 12px;
+      background-color: var(--main-pannel-color);
+    }
+
+    .main {
+      flex: 1;
+    }
+    .item-desc {
+      padding-left: 22px;
+      font-size: 12px;
+      color: #7c7c7c;
+    }
+
+    .loader {
+      margin-left: 4px;
+      border: 3px solid #f3f3f3; /* Light grey */
+      border-top: 3px solid #3498db; /* Blue */
+      border-radius: 50%;
+      width: 8px;
+      height: 8px;
+      animation: spin 0.3s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    ocode-file-item-inner {
+      cursor: pointer;
+    }
+
+    ocode-file-item-inner.active {
+      background-color: red;
+    }
+
+    iframe {
+      display: block;
+      border: none;
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+    }
+  </style>
+  <div class="second-pannel">
+    <h4>
+      可预览的页面
+      <x-if :value="loading">
+        <div class="loader"></div>
+      </x-if>
+    </h4>
+    <div class="list">
+      <x-fill :value="lists">
+        <ocode-file-item-inner
+          attr:selected="$data.path === $host.currentPath ? '' : null"
+          :name="$data.name"
+          attr:title="$data.path"
+          on:click="$host.setActive($data.path)"
+        >
+          <div class="item-desc">{{$data.path}}</div>
+        </ocode-file-item-inner>
+      </x-fill>
+    </div>
+  </div>
+  <div class="main">
+    <x-if :value="currentUrl">
+      <iframe attr:src="currentUrl" id="myIframe" on:load="loadFrame"></iframe>
+    </x-if>
+  </div>
+  <script>
+    export default async ({ load }) => {
+      const { get } = await load("@nos/core/fs/local/main.js");
+
+      return {
+        data: {
+          loading: false,
+          lists: [], // 存放可是页面的列表
+          currentUrl: null,
+          currentPath: "",
+        },
+        proto: {
+          loadFrame(e) {
+            const { target } = e;
+            console.log("frame load: ", e, target);
+          },
+          async setActive(path) {
+            this.currentPath = path;
+            this.currentUrl = null;
+
+            setTimeout(() => {
+              this.currentUrl = `$${path}`;
+            }, 50);
+          },
+          // 加载列表
+          async reloadList() {
+            // 读取目标目录
+            const searchParams = new URLSearchParams(location.search);
+
+            const needOpen = searchParams.get("open");
+
+            if (needOpen) {
+              // 打开本地目录
+              const targetFolder = await get(needOpen);
+
+              this.loading = true;
+              this.lists = [];
+
+              await getUsableHtml(targetFolder, ({ handle, content }) => {
+                this.lists.push({
+                  name: handle.name,
+                  path: handle.path,
+                });
+              });
+
+              this.setActive(this.lists[0].path);
+              this.loading = false;
+            }
+          },
+        },
+        ready() {
+          this.reloadList();
+        },
+        loaded() {
+          window.addEventListener("popstate", (e) => {
+            debugger;
+          });
+        },
+      };
+    };
+
+    async function getUsableHtml(handle, callback) {
+      for await (let subHandle of handle.values()) {
+        if (subHandle.kind === "directory") {
+          await getUsableHtml(subHandle, callback);
+        } else if (/\.html$/.test(subHandle.name)) {
+          const content = await subHandle.text();
+
+          if (content.includes("<!DOCTYPE html>")) {
+            callback({
+              handle: subHandle,
+              content,
+            });
+          }
+        }
+      }
+    }
+  </script>
+</template>

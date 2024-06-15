@@ -90,7 +90,15 @@
         ></iconify-icon>
       </div>
     </div>
-    <o-page src="./pages/main.html" style="flex: 1"></o-page>
+    <x-if :value="activeName === 'Files'">
+      <o-page src="./pages/main.html" style="flex: 1"></o-page>
+    </x-if>
+    <x-else-if :value="activeName === 'Preview'">
+      <o-page src="./pages/view.html" style="flex: 1"></o-page>
+    </x-else-if>
+    <x-else-if :value="activeName === 'Search'">
+      <o-page src="./pages/search.html" style="flex: 1"></o-page>
+    </x-else-if>
   </div>
 
   <script>
@@ -100,7 +108,7 @@
       return {
         tag: "o-code",
         data: {
-          activeName: "Files",
+          activeName: "Preview",
         },
         proto: {},
         async ready() {},
