@@ -91,7 +91,7 @@
       </div>
     </div>
     <x-if :value="activeName === 'Files'">
-      <o-page src="./pages/main.html" style="flex: 1"></o-page>
+      <o-page src="./pages/files.html" style="flex: 1"></o-page>
     </x-if>
     <x-else-if :value="activeName === 'Preview'">
       <o-page src="./pages/view.html" style="flex: 1"></o-page>
@@ -108,9 +108,23 @@
       return {
         tag: "o-code",
         data: {
-          activeName: "Preview",
+          activeName: "Files",
         },
-        proto: {},
+        proto: {
+          async getMainHandler() {
+            // 读取目标目录
+            const searchParams = new URLSearchParams(location.search);
+
+            const needOpen = searchParams.get("open");
+
+            if (needOpen) {
+              // 打开本地目录
+              const targetFolder = await get(needOpen);
+
+              return targetFolder;
+            }
+          },
+        },
         async ready() {},
       };
     };

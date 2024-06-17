@@ -75,6 +75,11 @@
       </x-if>
     </h4>
     <div class="list">
+      <x-if :value="!loading && lists.length === 0">
+        <div style="padding-top: 40px; text-align: center; font-size: 12px">
+          无
+        </div>
+      </x-if>
       <x-fill :value="lists">
         <ocode-file-item-inner
           attr:selected="$data.path === $host.currentPath ? '' : null"
@@ -118,14 +123,10 @@
           },
           // 加载列表
           async reloadList() {
-            // 读取目标目录
-            const searchParams = new URLSearchParams(location.search);
+            const targetFolder = await this.host.getMainHandler();
 
-            const needOpen = searchParams.get("open");
-
-            if (needOpen) {
+            if (targetFolder) {
               // 打开本地目录
-              const targetFolder = await get(needOpen);
 
               this.loading = true;
               this.lists = [];

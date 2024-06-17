@@ -254,15 +254,9 @@
           },
         },
         async ready() {
-          // 读取目标目录
-          const searchParams = new URLSearchParams(location.search);
+          const targetFolder = await this.host.getMainHandler();
 
-          const needOpen = searchParams.get("open");
-
-          if (needOpen) {
-            // 打开本地目录
-            const targetFolder = await get(needOpen);
-
+          if (targetFolder) {
             const list = await getListData(targetFolder);
 
             this.initProject({
@@ -279,13 +273,12 @@
             });
 
             this.restoreTabs();
-            return;
+          } else {
+            this.initProject({
+              defaultSelectedPath: "", // 默认选择中的文件路径
+              list: [], // 文件夹列表
+            });
           }
-
-          this.initProject({
-            defaultSelectedPath: "", // 默认选择中的文件路径
-            list: [], // 文件夹列表
-          });
         },
         attached() {
           // 添加快捷键
