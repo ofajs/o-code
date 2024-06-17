@@ -105,28 +105,63 @@
     export default async ({ load }) => {
       const { get } = await load("@nos/core/fs/local/main.js");
 
+      // 读取目标目录
+      const searchParams = new URLSearchParams(location.search);
+      const needOpen = searchParams.get("open");
+
       return {
         tag: "o-code",
         data: {
           activeName: "Files",
+          needOpen,
         },
         proto: {
           async getMainHandler() {
-            // 读取目标目录
-            const searchParams = new URLSearchParams(location.search);
-
-            const needOpen = searchParams.get("open");
-
-            if (needOpen) {
+            if (this.needOpen) {
               // 打开本地目录
-              const targetFolder = await get(needOpen);
+              const targetFolder = await get(decodeURIComponent(needOpen));
 
               return targetFolder;
+            } else {
+              // 重新创建一个项目
+              const newFolder = await get("folder_" + Date.now(), {
+                create: "directory",
+              });
+
+              await initProject(newFolder);
+
+              history.pushState(
+                null,
+                "",
+                `?open=${encodeURIComponent(newFolder.name)}`
+              );
+
+              return newFolder;
             }
           },
         },
         async ready() {},
       };
+    };
+
+    // 初始化一个目录
+    const initProject = async (parHandle) => {
+      const fileHandle = await parHandle.get("index.html", {
+        create: "file",
+      });
+
+      // 写入一个预览用的html
+      await fileHandle.write(`<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    Hello World!
+  </body>
+</html>`);
     };
   </script>
 </template>
